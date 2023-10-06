@@ -1,32 +1,22 @@
+// Main server setup
+
 const express = require('express');
-const path = require('path');
-
-// Create an Express application
 const app = express();
+const connectDB = require('./config/database');
+//add routes for each page here
 
-// Define a port for your server to listen on
-const port = process.env.PORT || 3000;
+require('dotenv').config({path: './config/.env'})
 
-// Middleware for serving static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
+connectDB();
 
-// Define routes for different pages
-app.get('/', (req, res) => {
-  // Serve the homepage (index.html)
-  res.sendFile(path.join(__dirname, 'public', '/views/index.html'));
-});
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// app.get('/about', (req, res) => {
-//   // Serve the "about" page (about.html)
-//   res.sendFile(path.join(__dirname, 'public', 'about.html'));
-// });
+// app.use('/', homeRoutes);
+//app.use('/', recipeRoutes);
 
-// app.get('/contact', (req, res) => {
-//   // Serve the "contact" page (contact.html)
-//   res.sendFile(path.join(__dirname, 'public', 'contact.html'));
-// });
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.listen(process.env.PORT, () => {
+    console.log('Server is running, you better catch it!');
+})
